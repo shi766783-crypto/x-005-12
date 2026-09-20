@@ -73,7 +73,8 @@ async function submit() {
         </el-select>
       </el-form-item>
       <el-form-item label="数量">
-        <el-input-number v-model="form.quantity" :min="0" />
+        <el-input-number v-model="form.quantity" :min="0" :disabled="!!material" />
+        <span v-if="material" class="muted" style="margin-left: 8px">库存通过入库/领用/盘点流水变动</span>
       </el-form-item>
       <el-form-item label="单位" prop="unit">
         <el-input v-model="form.unit" placeholder="如：块 / 米 / 个" />

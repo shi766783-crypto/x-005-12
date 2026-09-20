@@ -92,6 +92,9 @@ function goReturn(recordId: string) {
         <el-button type="success" @click="router.push({ name: 'materials' })">
           <el-icon><Box /></el-icon>&nbsp;管理材料
         </el-button>
+        <el-button @click="router.push({ name: 'material-ledger' })">
+          <el-icon><Document /></el-icon>&nbsp;出入库流水
+        </el-button>
         <el-button type="warning" @click="router.push({ name: 'projects' })">
           <el-icon><Notebook /></el-icon>&nbsp;创建项目
         </el-button>

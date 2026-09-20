@@ -28,6 +28,9 @@ const activeMenu = computed(() => {
         <el-menu-item index="materials" :route="{ name: 'materials' }">
           <el-icon><Box /></el-icon><span>材料库存</span>
         </el-menu-item>
+        <el-menu-item index="material-ledger" :route="{ name: 'material-ledger' }">
+          <el-icon><Document /></el-icon><span>出入库流水</span>
+        </el-menu-item>
         <el-menu-item index="projects" :route="{ name: 'projects' }">
           <el-icon><Notebook /></el-icon><span>DIY 项目</span>
         </el-menu-item>

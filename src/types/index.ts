@@ -32,6 +32,32 @@ export interface Material {
   updatedAt: number
 }
 
+// ---------- 材料出入库流水 ----------
+export type TxnType = '入库' | '领用' | '调整'
+
+export interface MaterialTransaction {
+  id: string
+  materialId: string
+  materialName: string // 冗余名称，材料改名后流水仍可辨认
+  unit: string // 冗余单位
+  type: TxnType
+  change: number // 数量变化（带符号）：入库 +、领用 -、调整 ±
+  balance: number // 本笔记账后的结存
+  reason: string // 变化原因（采购入库 / 项目领用 / 盘点调整 …）
+  note?: string // 备注说明
+  happenedAt: number // 业务发生时间（可补录），流水按此排序
+  createdAt: number // 记账时间
+}
+
+/** 各流水类型对应的常用原因 */
+export const TXN_REASONS: Record<TxnType, string[]> = {
+  入库: ['采购入库', '结余入库', '退料入库', '其他入库'],
+  领用: ['项目领用', '日常使用', '损耗报废', '其他领用'],
+  调整: ['盘点调整', '损耗调整', '录入更正', '其他调整'],
+}
+
+export const TXN_TYPES: TxnType[] = ['入库', '领用', '调整']
+
 // ---------- 项目 ----------
 export type ProjectCategory = '家具制作' | '水电维修' | '电子制作' | '家居改造' | '其他'
 export type Difficulty = '简单' | '中等' | '困难'
