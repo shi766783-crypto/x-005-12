@@ -13,6 +13,14 @@ export function formatDate(ts: number): string {
   return `${y}-${m}-${day}`
 }
 
+/** 时间戳 → YYYY-MM-DD HH:mm，出入库流水展示用 */
+export function formatDateTime(ts: number): string {
+  const d = new Date(ts)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${formatDate(ts)} ${hh}:${mm}`
+}
+
 /** 判断某个时间戳是否属于本月 */
 export function isCurrentMonth(ts: number): boolean {
   const d = new Date(ts)

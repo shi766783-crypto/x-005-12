@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { Material, MaterialCategory } from '../types'
@@ -23,6 +23,7 @@ const emptyForm = {
 }
 
 const form = reactive({ ...emptyForm })
+const isEdit = computed(() => !!props.material)
 
 const rules: FormRules = {
   name: [{ required: true, message: '请输入材料名称', trigger: 'blur' }],
@@ -43,14 +44,23 @@ async function submit() {
   } catch {
     return
   }
-  const payload = {
-    ...form,
-    quantity: toNumber(form.quantity),
-    minStock: toNumber(form.minStock),
+  if (isEdit.value && props.material) {
+    // 编辑时不允许直接改数量：库存只能通过入库/领用/盘点流水变动
+    store.updateMaterial(props.material.id, {
+      name: form.name,
+      category: form.category,
+      unit: form.unit,
+      minStock: toNumber(form.minStock),
+      location: form.location,
+    })
+  } else {
+    store.addMaterial({
+      ...form,
+      quantity: toNumber(form.quantity),
+      minStock: toNumber(form.minStock),
+    })
   }
-  if (props.material) store.updateMaterial(props.material.id, payload)
-  else store.addMaterial(payload)
-  ElMessage.success(props.material ? '材料已更新' : '材料已添加')
+  ElMessage.success(isEdit.value ? '材料已更新' : '材料已添加，期初数量已记入入库流水')
   emit('saved')
   emit('update:modelValue', false)
 }
@@ -72,8 +82,12 @@ async function submit() {
           <el-option v-for="c in MATERIAL_CATEGORIES" :key="c" :label="c" :value="c" />
         </el-select>
       </el-form-item>
-      <el-form-item label="数量">
-        <el-input-number v-model="form.quantity" :min="0" />
+      <el-form-item :label="isEdit ? '当前库存' : '期初数量'">
+        <el-input-number v-model="form.quantity" :min="0" :disabled="isEdit" />
+        <span v-if="isEdit" class="muted" style="margin-left: 8px">
+          库存由出入库流水决定，请使用「入库 / 领用 / 盘点」调整
+        </span>
+        <span v-else class="muted" style="margin-left: 8px">建卡后自动记一笔期初入库</span>
       </el-form-item>
       <el-form-item label="单位" prop="unit">
         <el-input v-model="form.unit" placeholder="如：块 / 米 / 个" />

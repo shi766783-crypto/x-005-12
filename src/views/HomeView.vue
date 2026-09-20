@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { useDashboard } from '../composables/useDashboard'
 import { useToolStore } from '../stores/useToolStore'
 import { useBorrowStore } from '../stores/useBorrowStore'
+import { useMaterialStore } from '../stores/useMaterialStore'
 import StatCard from '../components/StatCard.vue'
 import { today, isOverdue } from '../utils/format'
 
@@ -10,6 +11,7 @@ const router = useRouter()
 const { stats, unreturnedBorrows, lowStockMaterials } = useDashboard()
 const toolStore = useToolStore()
 const borrowStore = useBorrowStore()
+const materialStore = useMaterialStore()
 
 function toolName(id: string): string {
   return toolStore.getTool(id)?.name ?? '未知工具'
@@ -72,7 +74,7 @@ function goReturn(recordId: string) {
           <el-table-column prop="name" label="材料" min-width="100" />
           <el-table-column label="当前库存" width="110" align="center">
             <template #default="{ row }">
-              <span class="gap-missing">{{ row.quantity }} {{ row.unit }}</span>
+              <span class="gap-missing">{{ materialStore.getBalance(row.id) }} {{ row.unit }}</span>
             </template>
           </el-table-column>
           <el-table-column label="预警值" width="90" align="center">

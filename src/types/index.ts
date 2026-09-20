@@ -24,12 +24,35 @@ export interface Material {
   id: string
   name: string
   category: MaterialCategory
-  quantity: number
+  quantity: number // 当前库存（与出入库流水始终保持一致：等于该材料全部流水数量变化之和）
   unit: string
   minStock: number // 最低库存预警值
   location: string
   createdAt: number
   updatedAt: number
+}
+
+// ---------- 材料出入库流水 ----------
+export type StockTxnType = '入库' | '领用' | '盘点调整'
+
+export interface MaterialTxn {
+  id: string
+  materialId: string
+  materialName: string // 发生时的材料名称（材料后续改名/删除，历史流水仍可辨认）
+  unit: string
+  type: StockTxnType
+  change: number // 库存数量变化：入库为正、领用为负、盘点调整可正可负
+  balance: number // 本笔之后的库存结余
+  reason: string // 原因/备注：进货来源、领用用途、盘点盈亏原因
+  time: number // 发生时间（毫秒时间戳），流水按此排序
+}
+
+export const STOCK_TXN_TYPES: StockTxnType[] = ['入库', '领用', '盘点调整']
+
+export const STOCK_TXN_TAG: Record<StockTxnType, 'success' | 'warning' | 'danger'> = {
+  入库: 'success',
+  领用: 'warning',
+  盘点调整: 'danger',
 }
 
 // ---------- 项目 ----------

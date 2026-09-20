@@ -259,7 +259,7 @@ async function submit() {
           <el-option
             v-for="m in materialStore.materials.value"
             :key="m.id"
-            :label="`${m.name}（库存 ${m.quantity}${m.unit}）`"
+            :label="`${m.name}（库存 ${materialStore.getBalance(m.id)}${m.unit}）`"
             :value="m.id"
           />
         </el-select>

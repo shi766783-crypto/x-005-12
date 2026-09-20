@@ -88,8 +88,8 @@ export function useProjectStore() {
       .map((item: ProjectMaterialItem) => {
         let available = 0
         if (item.source === 'library' && item.materialId) {
-          const material = materialStore.getMaterial(item.materialId)
-          if (material) available = toNumber(material.quantity)
+          // 可用数量以出入库流水结余为准
+          available = materialStore.getBalance(item.materialId)
         }
         const required = toNumber(item.requiredQty)
         return {

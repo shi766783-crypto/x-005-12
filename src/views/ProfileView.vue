@@ -58,7 +58,7 @@ const activeTab = ref('badges')
           <el-table-column prop="name" label="名称" min-width="130" />
           <el-table-column prop="category" label="类别" width="110" />
           <el-table-column label="数量" width="110" align="center">
-            <template #default="{ row }">{{ row.quantity }} {{ row.unit }}</template>
+            <template #default="{ row }">{{ materialStore.getBalance(row.id) }} {{ row.unit }}</template>
           </el-table-column>
         </el-table>
         <el-empty v-if="!materialStore.materials.value.length" description="暂无材料" :image-size="60" />
